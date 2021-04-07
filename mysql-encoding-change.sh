@@ -1,7 +1,7 @@
 #!/bin/bash
 # Change MySQL encoding on whole DB,TABLES,COLUMNS...
 
-DBNAME='lmsoldgtnet'
+DBNAME='mysqldbname'
 
 mysql ${DBNAME} -e "ALTER DATABASE ${DBNAME} CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci"
 
