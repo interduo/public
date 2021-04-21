@@ -1,20 +1,18 @@
 <?php
 
-$visible1 = "";
-$visible2 = null;
-$visible3 = 0;
-$visible4 = 1;
+$var[1] = "";
+$var[2] = null;
+$var[3] = 0;
+$var[4] = 1;
+unset($var[5]);
 
-$visible1 = ($visible1=="" ? false : true);
-print 'visible1 ' . $visible1 . ' ';
+function testit($v) {
+    $v = ($v =='' || !isset($v)) ? true : false;
+    return $v;
+}
 
-$visible2 = ($visible2=="" ? false : true);
-print 'visible2 ' . $visible2 . ' ';
-
-$visible3 = ($visible3=="" ? false : true);
-print 'visible3 ' . $visible3 . ' ';
-
-$visible4 = ($visible4=="" ? false : true);
-print 'visible4 ' . $visible4 . ' ';
-
+foreach ($var as $key=>$v) {
+	print 'wyniktestu dla zmiennej-' . $key . ' ' . testit($v) . ' ' . PHP_EOL;
+}
+	print 'wyniktestu dla zmiennej-5' . testit($var[5]);
 ?>
