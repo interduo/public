@@ -1,7 +1,9 @@
 #!/bin/bash
+#USAGE
+#/path/to/change-initialtabs-to-4spaces.sh filename.php
 
-#USAGE:
-#find . -type f -name "*.php" -exec /root/change-initialtabs-to-4spaces.sh {} \;
+#MASS USAGE:
+#find . -type f -name "*.php" -exec /path/to/change-initialtabs-to-4spaces.sh {} \;
 
 FILENAME="$1"
 TMPFILE="/tmp/4spaces-${RANDOM}"
