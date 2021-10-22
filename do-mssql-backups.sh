@@ -2,7 +2,7 @@
 SQL_LOGIN='uzytkownik'
 SQL_PASS='pasło'
 SQL_HOST='192.168.1.1'
-SQL_QUERY='./backupjob.txt'
+SQL_QUERY='./do-mssql-backups-job.txt'
 STORAGE='/sql-backups'
 DATENOW=`date +%Y%m%d_%H%M`
 MAILTO='adres@domena.pl'
