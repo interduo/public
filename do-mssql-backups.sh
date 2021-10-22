@@ -21,4 +21,4 @@ find ${STORAGE} -type f -name "*BAK" -ctime +"${KEEPBACKUPDAYS}" -delete
 find ${STORAGE} -type d -empty -delete
 
 #send raport to admin
-/skrypty/raportuj-stan-kopii-db.sh "${MAILTO}"
+./do-mssql-backups-send-mail-raport.sh "${MAILTO}"
