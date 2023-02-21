@@ -1,0 +1,115 @@
+#network router tweak
+
+#discovery - show me your settings
+- ip link show,
+- ethtool nazwa interfejsu (a w szczególności ustawienia offloadingu: gro i lro), 
+(ethtool -c, ethtool -g, ethtool -k, ethtool -l, ethtool -x)
+- uname -a,
+- uptime,
+- top (wciśnij 1) i ctrl+s oraz skopiuj dane dotyczące CPU,
+- cat /proc/interrupts,
+- perf top,
+- numactl --show,
+- numactl --hardware,
+- cat /proc/cpuinfo,
+- lscpu
+- iptables -L -n -t nat,
+- iptables -L -n -t filter,
+- iptables -L -n -t mangle,
+- iptables -L -n -t raw,
+- cat /proc/sys/net/netfilter/nf_conntrack_count,
+(lub conntrack -C)
+- lsmod,
+- modinfo ixgbe,
+- cat /proc/net/softnet_stat
+- cat /sys/devices/system/cpu/cpufreq/policy*/scaling_governor
+- cpufreq-info | grep current
+- cat /proc/sys/net/core/netdev_max_backlog
+- for i in `lspci | grep ES| awk '{print $1}'`; do lspci -s $i -vv | grep GT; done
+- i skrypty kolejkowania.
+
+
+#tweaks
+
+#sysctl.d/99-sysctl.conf
+net.netfilter.nf_conntrack_max=1048576
+net.netfilter.nf_conntrack_tcp_timeout_established=14400
+net.netfilter.nf_conntrack_tcp_timeout_time_wait=5
+net.core.netdev_budget=600
+net.core.netdev_max_backlog=300000
+net.ipv6.conf.all.disable_ipv6=1
+net.netfilter.nf_conntrack_helper=1
+net.ipv4.tcp_fin_timeout=30
+net.ipv4.tcp_keepalive_intvl=30
+net.ipv4.tcp_keepalive_probes=5
+net.ipv4.tcp_low_latency=1
+net.ipv4.tcp_max_syn_backlog=8192
+net.ipv4.tcp_timestamps=0
+net.core.rmem_max=134217728
+net.ipv4.tcp_sack=0
+net.ipv4.neigh.default.gc_thresh1=1024
+net.ipv4.neigh.default.gc_thresh2=4096
+net.ipv4.neigh.default.gc_thresh3=8192
+net.ipv4.neigh.default.gc_stale_time=86400
+net.core.rmem_max=134217728
+net.core.wmem_max=134217728
+net.ipv4.tcp_rmem= 4096 87380 134217728
+net.ipv4.tcp_wmem= 4096 65536 134217728
+vm.swappiness=10
+net.core.optmem_max=65536
+net.ipv4.tcp_fastopen=3
+net.ipv4.tcp_slow_start_after_idle=0
+
+
+
+#cpu scaling_governor
+echo performance > /sys/devices/system/cpu/cpu0/cpufreq/scaling_governor
+echo performance > /sys/devices/system/cpu/cpu1/cpufreq/scaling_governor
+echo performance > /sys/devices/system/cpu/cpu2/cpufreq/scaling_governor
+echo performance > /sys/devices/system/cpu/cpu3/cpufreq/scaling_governor
+echo performance > /sys/devices/system/cpu/cpu4/cpufreq/scaling_governor
+echo performance > /sys/devices/system/cpu/cpu5/cpufreq/scaling_governor
+echo performance > /sys/devices/system/cpu/cpu6/cpufreq/scaling_governor
+echo performance > /sys/devices/system/cpu/cpu7/cpufreq/scaling_governor
+echo performance > /sys/devices/system/cpu/cpu8/cpufreq/scaling_governor
+echo performance > /sys/devices/system/cpu/cpu9/cpufreq/scaling_governor
+echo performance > /sys/devices/system/cpu/cpu10/cpufreq/scaling_governor
+echo performance > /sys/devices/system/cpu/cpu11/cpufreq/scaling_governor
+echo performance > /sys/devices/system/cpu/cpu12/cpufreq/scaling_governor
+echo performance > /sys/devices/system/cpu/cpu13/cpufreq/scaling_governor
+echo performance > /sys/devices/system/cpu/cpu14/cpufreq/scaling_governor
+echo performance > /sys/devices/system/cpu/cpu15/cpufreq/scaling_governor
+
+
+#NIC related
+echo 524288 > /sys/module/nf_conntrack/parameters/hashsize
+
+ethtool -L ens1f0 combined 8
+ethtool -K lro off gro off tso off gso off
+ethtool -A ens1f0 autoneg off rx off tx off duplex full speed 10000
+#20200229 - u nas bardziej się sprawdza:
+ethtool -C ens1f0 rx-usecs 125
+niż:
+#ethtool -C ens1f0 adaptive-tx on adaptive-rx on
+###
+
+ethtool -N eth0 rx-flow-hash tcp4 sdfn
+ethtool -N eth0 rx-flow-hash udp4 sdfn
+
+ip link set ens1f0 txqueuelen 
+
+
+Turn off mitigations:
+Add this option bellow to GRUB_CMDLINE_LINUX_DEFAULT in /etc/default/grub
+noibrs noibpb nopti nospectre_v2 nospectre_v1 l1tf=off nospec_store_bypass_disable no_stf_barrier mds=off tsx=on tsx_async_abort=off mitigations=off
+run cmd update-grub2
+
+Making bigger queues:
+sysctl -w net.core.netdev_budget=1000
+sysctl -w net.core.netdev_max_backlog=30000
+
+DMA Ring RX buffers
+ethtool --set-ring ens16f0np0 rx 8192
+ethtool --set-ring ens16f1np1 rx 8192
+
+Setting better coalescence (not adaptive, or adaptive with special settings)
