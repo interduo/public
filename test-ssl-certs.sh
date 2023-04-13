@@ -15,3 +15,12 @@ openssl s_client -connect interduo.pl:587 -starttls smtp
 
 #Test HTTPS certificate
 openssl s_client -connect interduo.pl:443
+
+#Weryfikacja żądania pliku CSR:
+openssl req -in csr.txt -noout -text
+
+#Odczytanie numeru seryjnego certyfikatu:
+openssl x509 -in certyfikat.crt -serial -noout
+
+#Odczytanie daty ważności certyfikatu:
+openssl x509 -in certyfikat.crt --enddate -noout
