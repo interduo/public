@@ -13,4 +13,7 @@ function delete_all_between($beginning, $end, $string) {
     return delete_all_between($beginning, $end, str_replace($textToDelete, '', $string)); // recursion to ensure all occurrences are replaced
 }
 
+//alternative to:
+preg_replace('/START[\s\S]+?END/', '', $string);
+
 ?>
