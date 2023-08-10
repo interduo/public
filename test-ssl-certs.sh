@@ -12,6 +12,7 @@ openssl s_client -connect interduo.pl:465
 
 #Test SMTP TLS certificate
 openssl s_client -connect interduo.pl:587 -starttls smtp
+openssl s_client -connect interduo.pl:25 -starttls smtp
 
 #Test HTTPS certificate
 openssl s_client -connect interduo.pl:443
