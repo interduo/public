@@ -1,4 +1,5 @@
 #!/bin/bash
+# author: Jarosław Kłopotek <jkl@interduo.pl> github:interduo
 # put the script in /etc/gammu-smsdrc in runonreceive variable, merges long SMSes and send mail with SMS content
 # requires: find, awk, msmtp,
 
