@@ -5,8 +5,15 @@
 
 GAMMU_LMSOUT='/var/spool/gammu/wyslanedolms'
 GAMMU_INBOX='/var/spool/gammu/inbox'
-RTMAIL='domain@your-company.pl';
+RTMAIL='rt@interduo.pl';
 MAILCONTENTTYPE="Content-type: text/plain; charset=utf-8"
 
-echo -e "Subject:SMS:${SMS_1_NUMBER}\n${MAILCONTENTTYPE}\n${DECODED_1_TEXT}\n" | msmtp -t ${RTMAIL}
+if [ -n "${DECODED_1_TEXT}" ]
+then
+        SMSCONTENT="${DECODED_1_TEXT}"
+else
+        SMSCONTENT="${SMS_1_TEXT}"
+fi
+
+echo "${MAILCONTENTTYPE}\nSubject:SMS:${SMS_1_NUMBER}\n${SMSCONTENT}" | msmtp -t ${RTMAIL}
 find ${GAMMU_INBOX} -type f -exec mv {} ${GAMMU_LMSOUT} \;
