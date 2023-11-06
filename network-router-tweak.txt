@@ -64,6 +64,7 @@ net.ipv4.tcp_slow_start_after_idle=0
 
 #cpu scaling_governor
 echo performance | tee /sys/devices/system/cpu/cpu*/cpufreq/scaling_governor
+echo 3500000 | tee /sys/devices/system/cpu/cpu*/cpufreq/scaling_min_freq
 
 #NIC related
 echo 524288 > /sys/module/nf_conntrack/parameters/hashsize
