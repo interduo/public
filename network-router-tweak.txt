@@ -60,41 +60,39 @@ net.core.optmem_max=65536
 net.ipv4.tcp_fastopen=3
 net.ipv4.tcp_slow_start_after_idle=0
 
-
-
 #cpu scaling_governor
 echo performance | tee /sys/devices/system/cpu/cpu*/cpufreq/scaling_governor
 echo 3500000 | tee /sys/devices/system/cpu/cpu*/cpufreq/scaling_min_freq
 
 #NIC related
 echo 524288 > /sys/module/nf_conntrack/parameters/hashsize
-
 ethtool -L ens1f0 combined 8
 ethtool -K lro off gro off tso off gso off
 ethtool -A ens1f0 autoneg off rx off tx off duplex full speed 10000
+
+ethtool -N eth0 rx-flow-hash tcp4 sdfn
+ethtool -N eth0 rx-flow-hash udp4 sdfn
+
+#Set bigger qlen
+ip link set ens16np0 qlen 10000
+ip link set ens17np0 qlen 10000
+
+#Turn off mitigations:
+Add this option bellow to GRUB_CMDLINE_LINUX_DEFAULT in /etc/default/grub
+noibrs noibpb nopti nospectre_v2 nospectre_v1 l1tf=off nospec_store_bypass_disable no_stf_barrier mds=off tsx=on tsx_async_abort=off mitigations=off
+run cmd update-grub2
+
+#Making bigger queues:
+sysctl -w net.core.netdev_budget=1000
+sysctl -w net.core.netdev_max_backlog=30000
+
+#DMA Ring RX buffers
+ethtool --set-ring ens16f0np0 rx 8192
+ethtool --set-ring ens16f1np1 rx 8192
+
+#Setting better coalescence (not adaptive, or adaptive with special settings)
 #20200229 - u nas bardziej się sprawdza:
 ethtool -C ens1f0 rx-usecs 125
 niż:
 #ethtool -C ens1f0 adaptive-tx on adaptive-rx on
 ###
-
-ethtool -N eth0 rx-flow-hash tcp4 sdfn
-ethtool -N eth0 rx-flow-hash udp4 sdfn
-
-ip link set ens1f0 txqueuelen 
-
-
-Turn off mitigations:
-Add this option bellow to GRUB_CMDLINE_LINUX_DEFAULT in /etc/default/grub
-noibrs noibpb nopti nospectre_v2 nospectre_v1 l1tf=off nospec_store_bypass_disable no_stf_barrier mds=off tsx=on tsx_async_abort=off mitigations=off
-run cmd update-grub2
-
-Making bigger queues:
-sysctl -w net.core.netdev_budget=1000
-sysctl -w net.core.netdev_max_backlog=30000
-
-DMA Ring RX buffers
-ethtool --set-ring ens16f0np0 rx 8192
-ethtool --set-ring ens16f1np1 rx 8192
-
-Setting better coalescence (not adaptive, or adaptive with special settings)
