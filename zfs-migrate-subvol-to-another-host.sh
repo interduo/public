@@ -1,6 +1,11 @@
 #!/bin/bash
+# example1: replicate single pool/subvol/zvol using SSH to remote host
+zfs snapshot zfs1-vps1/subvol-103-disk-0@migracja
+zfs send zfs1-vps1/subvol-103-disk-0@migracja | ssh root@10.100.0.4 zfs recv zfs1-vps1/subvol-103-disk-0@migracja
 
-# example1
+
+# example2: mass replication whole rpool using SSH to remote host
+
 # Setup/variables:
 snapshot_string=DO_NOT_DELETE_
 timestamp=`date +%Y%m%d%H%M%S`
