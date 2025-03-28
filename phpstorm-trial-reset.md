@@ -7,6 +7,7 @@ for product in IntelliJIdea WebStorm DataGrip PhpStorm CLion PyCharm GoLand Ruby
 done
 
 #But if not, try these
+
 for product in IntelliJIdea WebStorm DataGrip PhpStorm CLion PyCharm GoLand RubyMine; do
     echo "[+] Resetting trial period for $product"
 
