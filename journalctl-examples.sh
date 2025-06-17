@@ -6,3 +6,6 @@ journalctl -u lqosd --since yesterday
 
 # clean logs older than 5 minutes
 journalctl --vacuum-time=5min
+
+# show journal in reverse order
+journalctl --reverse
