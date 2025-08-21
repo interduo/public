@@ -25,3 +25,7 @@ openssl x509 -in certyfikat.crt -serial -noout
 
 #Odczytanie daty ważności certyfikatu:
 openssl x509 -in certyfikat.crt --enddate -noout
+
+#Testuj czy klucz prywatny i cert są parą:
+openssl x509 -noout -modulus -in /etc/ipsec.d/certs/certyfikat.crt | openssl md5
+openssl rsa  -noout -modulus -in /etc/ipsec.d/private/klucz.key | openssl md5
