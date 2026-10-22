@@ -1,4 +1,4 @@
-DEBIAN13/PROXMOX REPOS
+PROXMOX REPOS
 
 # Debian 13 Trixie
 cat > /etc/apt/sources.list.d/debian.list <<'EOF'
@@ -22,5 +22,15 @@ EOF
 [ -f /etc/apt/sources.list.d/pve-enterprise.sources ] && mv /etc/apt/sources.list.d/pve-enterprise.sources /etc/apt/sources.list.d/pve-enterprise.sources.disabled
 [ -f /etc/apt/sources.list.d/pve-enterprise.list ] && mv /etc/apt/sources.list.d/pve-enterprise.list /etc/apt/sources.list.d/pve-enterprise.list.disabled
 
-# Aktualizacja list pakietów
-apt update
+
+
+BOOKWORM:
+deb http://ftp.debian.org/debian bookworm main contrib
+deb https://ftp.debian.org/debian/ bookworm-updates contrib main non-free non-free-firmware
+deb https://security.debian.org/debian-security/ bookworm-security contrib main non-free non-free-firmware
+
+TRIXIE:
+deb https://deb.debian.org/debian/ trixie contrib main non-free non-free-firmware
+deb https://deb.debian.org/debian/ trixie-updates contrib main non-free non-free-firmware
+deb https://security.debian.org/debian-security/ trixie-security contrib main non-free non-free-firmware
+
