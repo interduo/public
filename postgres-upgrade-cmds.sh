@@ -1,8 +1,10 @@
 #Przegląd baz na portach
-for port in 5432 5433 5434; do
+#!/bin/bash
+for port in 5432 5433 5434 5435; do
     echo "===== PORT $port ====="
-    sudo -u postgres psql -p "$port" -Atc \
-      "SELECT datname FROM pg_database WHERE NOT datistemplate ORDER BY datname;"
+    runuser -u postgres -- psql -p "$port" -Atc \
+        "SELECT datname FROM pg_database WHERE NOT datistemplate ORDER BY datname;" \
+        || echo "(no cluster responding on port $port)"
 done
 
 #Upgrade postgresa np.
